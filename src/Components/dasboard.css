@@ -1,0 +1,46 @@
+.dashboard-container {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f1f1f1;
+    padding: 20px;
+  }
+  
+  .sidebar-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .menu-item {
+    margin-bottom: 10px;
+  }
+  
+  .menu-item a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .submenu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .submenu-item {
+    margin-bottom: 5px;
+  }
+  
+  .submenu-item a {
+    text-decoration: none;
+    color: #555;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+  }
+  
