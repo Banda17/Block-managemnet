@@ -4,6 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './Components/login';
 import Dashboard from './Components/dashboard';
 import TablePage from './Components/TablePage';
+import RequestBlockPage from './Components/RequestBlocks';
+import AcceptRequestPage from './Components/AcceptRequestPage';
+
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -24,6 +27,15 @@ const App = () => {
             path="/table"
             element={user ? <TablePage user={user} /> : <Navigate to="/login" />}
           />
+          <Route
+            path="/request-block"
+            element={user ? <RequestBlockPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/accept"
+            element={user ? <AcceptRequestPage /> : <Navigate to="/login" />}
+          />
+
           <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
       </div>

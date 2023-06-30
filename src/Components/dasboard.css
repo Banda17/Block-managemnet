@@ -43,4 +43,17 @@
     flex: 1;
     padding: 20px;
   }
+
+  .arrow {
+    margin-left: 5px;
+  }
+  
+  .up {
+    transform: rotate(-135deg);
+  }
+  
+  .down {
+    transform: rotate(45deg);
+  }
+  
   

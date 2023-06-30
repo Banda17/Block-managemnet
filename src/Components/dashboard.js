@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
+import RequestBlockPage from './RequestBlocks';
+import AcceptancePage from './AcceptRequestPage';
+import TablePage from './TablePage';
 
 const Dashboard = ({ user, setUser }) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
@@ -17,7 +20,7 @@ const Dashboard = ({ user, setUser }) => {
       <div className="sidebar">
         <ul className="sidebar-menu">
           <li className="menu-item">
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/dashboard/*">Dashboard</Link>
           </li>
           <li className="menu-item">
             <div onClick={toggleSubMenu} className="menu-item-header">
@@ -29,6 +32,12 @@ const Dashboard = ({ user, setUser }) => {
                 <li className="submenu-item">
                   <Link to="/request-block">Request Block</Link>
                 </li>
+                <li className="submenu-item">
+                  <Link to="/accept">Accept</Link>
+                </li>
+                <li className="submenu-item">
+                  <Link to="/table">Table</Link>
+                </li>
               </ul>
             )}
           </li>
@@ -36,7 +45,12 @@ const Dashboard = ({ user, setUser }) => {
       </div>
       <div className="content">
         <h2>Welcome, {user}!</h2>
-        <p>This is your dashboard.</p>
+        <Routes>
+          <Route path="/dashboard/*" element={<h3>Dashboard Content</h3>} />
+          <Route path="/request-block" element={<RequestBlockPage />} />
+          <Route path="/accept" element={<AcceptancePage />} />
+          <Route path="/table" element={<TablePage />} />
+        </Routes>
         <button onClick={handleLogout}>Logout</button>
       </div>
     </div>
