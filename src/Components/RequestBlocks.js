@@ -30,9 +30,13 @@ const RequestBlockPage = () => {
   });
 
   const dropdownOptions = {
-    department: ['Department 1', 'Department 2', 'Department 3'],
-    blockType: ['Type A', 'Type B', 'Type C'],
-    designation: ['Designation 1', 'Designation 2', 'Designation 3'],
+    department: ['Trd', 'SnT', 'Engg'],
+    blockType: {
+      'Trd': ['Type A', 'Type B', 'Type C'],
+      'SnT': ['Type X', 'Type Y', 'Type Z'],
+      'Engg': ['Type P', 'Type Q', 'Type R'],
+    },
+    designation: ['SSE', 'JE', 'Tech'],
     board: ['Board 1', 'Board 2', 'Board 3'],
     station: {
       'Board 1': ['Station A', 'Station B', 'Station C'],
@@ -43,10 +47,20 @@ const RequestBlockPage = () => {
 
   const handleDropdownChange = (event, dropdownId) => {
     const { value } = event.target;
-    setSelectedOptions(prevOptions => ({
-      ...prevOptions,
-      [dropdownId]: value
-    }));
+
+    // Update the selected department
+    if (dropdownId === 'department') {
+      setSelectedOptions(prevOptions => ({
+        ...prevOptions,
+        department: value,
+        blockType: '' // Reset the blockType value when department changes
+      }));
+    } else {
+      setSelectedOptions(prevOptions => ({
+        ...prevOptions,
+        [dropdownId]: value
+      }));
+    }
   };
 
   const handleSubmitRequest = () => {
@@ -84,9 +98,10 @@ const RequestBlockPage = () => {
               className="form-control"
               value={selectedOptions.blockType}
               onChange={event => handleDropdownChange(event, 'blockType')}
+              disabled={!selectedOptions.department} // Disable the dropdown if no department is selected
             >
               <option value="">Select a block type</option>
-              {dropdownOptions.blockType.map(option => (
+              {dropdownOptions.blockType[selectedOptions.department]?.map(option => (
                 <option key={option} value={option}>
                   {option}
                 </option>
