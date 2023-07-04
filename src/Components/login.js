@@ -1,6 +1,59 @@
 import React, { useState } from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
+import RequestBlockPage from './RequestBlocks';
+import AcceptancePage from './AcceptRequestPage';
+import TablePage from './TablePage';
 
-const Login = ({ setUser }) => {
+const Dashboard = ({ user, handleLogout }) => {
+  const [showSubMenu, setShowSubMenu] = useState(false);
+
+  const toggleSubMenu = () => {
+    setShowSubMenu(!showSubMenu);
+  };
+
+  return (
+    <div className="dashboard-container">
+      <div className="sidebar">
+        <ul className="sidebar-menu">
+          <li className="menu-item">
+            <Link to="/dashboard">Dashboard</Link>
+          </li>
+          <li className="menu-item">
+            <div onClick={toggleSubMenu} className="menu-item-header">
+              Blocks
+              <i className={`arrow ${showSubMenu ? 'up' : 'down'}`} />
+            </div>
+            {showSubMenu && (
+              <ul className="submenu">
+                <li className="submenu-item">
+                  <Link to="/request-block">Request Block</Link>
+                </li>
+                <li className="submenu-item">
+                  <Link to="/accept">Accept</Link>
+                </li>
+                <li className="submenu-item">
+                  <Link to="/table">Table</Link>
+                </li>
+              </ul>
+            )}
+          </li>
+        </ul>
+      </div>
+      <div className="content">
+        <h2>Welcome, {user.email}!</h2>
+        <Routes>
+          <Route path="/dashboard" element={<h3>Dashboard Content</h3>} />
+          <Route path="/request-block" element={<RequestBlockPage />} />
+          <Route path="/accept" element={<AcceptancePage />} />
+          <Route path="/table" element={<TablePage />} />
+        </Routes>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+    </div>
+  );
+};
+
+const Login = ({ setUser, setLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -21,6 +74,7 @@ const Login = ({ setUser }) => {
         // Authentication successful
         const user = await response.json();
         setUser(user);
+        setLoggedIn(true);
       } else {
         // Authentication failed
         console.log('Authentication failed');
@@ -58,90 +112,22 @@ const Login = ({ setUser }) => {
   );
 };
 
-const Register = ({ setUser }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('basic');
+const LoginForm = () => {
+  const [user, setUser] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-
-    try {
-      // Make a request to your backend server to perform registration
-      const response = await fetch('http://localhost:3001/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password, role }),
-      });
-
-      if (response.ok) {
-        // Registration successful
-        const user = await response.json();
-        setUser(user);
-      } else {
-        // Registration failed
-        console.log('Registration failed');
-      }
-    } catch (error) {
-      console.log('Error during registration:', error);
-    }
+  const handleLogout = () => {
+    setUser(null);
+    setLoggedIn(false);
   };
 
   return (
     <div>
-      <h2>Register</h2>
-      <form onSubmit={handleRegister}>
-        <label>
-          Email:
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Role:
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="basic">Basic</option>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
-        </label>
-        <br />
-        <button type="submit">Register</button>
-      </form>
-    </div>
-  );
-};
-
-const LoginForm = ({ setUser }) => {
-  const [isRegistering, setIsRegistering] = useState(false);
-
-  return (
-    <div>
-      {isRegistering ? (
-        <Register setUser={setUser} />
+      {loggedIn ? (
+        <Dashboard user={user} handleLogout={handleLogout} />
       ) : (
-        <Login setUser={setUser} />
+        <Login setUser={setUser} setLoggedIn={setLoggedIn} />
       )}
-      <p>
-        {isRegistering ? "Already have an account?" : "Don't have an account?"}
-        <button onClick={() => setIsRegistering(!isRegistering)}>
-          {isRegistering ? 'Login' : 'Register'}
-        </button>
-      </p>
     </div>
   );
 };

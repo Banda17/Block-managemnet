@@ -18,16 +18,18 @@ const App = () => {
             path="/login"
             element={user ? <Navigate to="/dashboard" /> : <Login setUser={setUser} />}
           />
-          <Route
-            path="/dashboard"
-            element={
-              user ? (
-                <Dashboard user={user} setUser={setUser} />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
+         <Route
+  path="/dashboard"
+  element={
+    user && user.role === 'admin' ? (
+      <Dashboard user={user} email={user.email} />
+    ) : (
+      <Navigate to="/login" />
+    )
+  }
+/>
+
+
           <Route
             path="/table"
             element={
