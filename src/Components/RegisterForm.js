@@ -1,39 +1,145 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const RegisterForm = () => {
+const Login = ({ setUser }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Make a request to your backend server to perform authentication
+      const response = await axios.post('http://localhost:3001/login', {
+        username,
+        password,
+      });
+
+      if (response.status === 200) {
+        // Authentication successful
+        const user = response.data;
+        setUser(user);
+      } else {
+        // Authentication failed
+        console.log('Authentication failed');
+      }
+    } catch (error) {
+      console.log('Error during authentication:', error);
+    }
+  };
+
   return (
-    <div className="container">
-      <h1>User Registration</h1>
-      <form>
-        <div className="mb-3">
-          <label htmlFor="username" className="form-label">Username:</label>
-          <input type="text" className="form-control" id="username" name="username" required />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email:</label>
-          <input type="email" className="form-control" id="email" name="email" required />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password:</label>
-          <input type="password" className="form-control" id="password" name="password" required />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="role" className="form-label">Role:</label>
-          <select className="form-select" id="role" name="role">
-            <option value="basic">basic</option>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
-        </div>
-
-        <button type="submit" className="btn btn-primary">Register</button>
+    <div>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <label>
+          Username:
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <br />
+        <button type="submit">Login</button>
       </form>
     </div>
   );
 };
 
-export default RegisterForm;
+const Register = ({ setUser }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('basic');
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Make a request to your backend server to perform registration
+      const response = await axios.post('http://localhost:3001/register', {
+        username,
+        password,
+        role,
+      });
+
+      if (response.status === 200) {
+        // Registration successful
+        const user = response.data;
+        setUser(user);
+      } else {
+        // Registration failed
+        console.log('Registration failed');
+      }
+    } catch (error) {
+      console.log('Error during registration:', error);
+    }
+  };
+
+  return (
+    <div>
+      <h2>Register</h2>
+      <form onSubmit={handleRegister}>
+        <label>
+          Username:
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Role:
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="basic">Basic</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+        </label>
+        <br />
+        <button type="submit">Register</button>
+      </form>
+    </div>
+  );
+};
+
+const LoginForm = ({ setUser }) => {
+  const [isRegistering, setIsRegistering] = useState(false);
+
+  return (
+    <div>
+      {isRegistering ? (
+        <Register setUser={setUser} />
+      ) : (
+        <Login setUser={setUser} />
+      )}
+      <p>
+        {isRegistering ? "Already have an account?" : "Don't have an account?"}
+        <button onClick={() => setIsRegistering(!isRegistering)}>
+          {isRegistering ? 'Login' : 'Register'}
+        </button>
+      </p>
+    </div>
+  );
+};
+
+export default LoginForm;
