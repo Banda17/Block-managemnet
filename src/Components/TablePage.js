@@ -80,30 +80,32 @@ const TablePage = ({ user }) => {
       <tbody>
         {tableData.map((data) => (
           <tr key={data.id}>
-            <td>{data.day}</td>
-            <td>{data.blockPeriod}</td>
-            <td>{data.blockTime}</td>
-            <td>{data.afterClearanceOf}</td>
-            <td>{data.department}</td>
-            <td>{data.sno}</td>
-            <td>{data.typeOfWork}</td>
-            <td>{data.quantumOfWork}</td>
-            <td>{data.blockSection}</td>
-            <td>{data.from}</td>
-            <td>{data.to}</td>
-            <td>{data.resources}</td>
-            <td>{data.supervisorDeputed}</td>
-            <td>{data.remarks}</td>
-            <td>{data.trafficRepercussion}</td>
-            <td>{data.organisationDemanded}</td>
-            <td>{data.demandedFrom}</td>
-            <td>{data.demandedTo}</td>
-            <td>{data.hrs}</td>
-            <td>{data.blockBurst}</td>
-            <td>{data.progress}</td>
-            <td>{data.chg}</td>
-            <td>{data.goods}</td>
-            <td>{data.remarksForProgress}</td>
+            <td>{data.Sno}</td>
+            <td>{data.Date}</td>
+            <td>{data.MajorSection}</td>
+            <td>{data.BlockStation_Station}</td>
+            <td>{data.Direction}</td>
+            <td>{data.Km}</td>
+            <td>{data.Dept}</td>
+            <td>{data.TypeofWork}</td>
+            <td>{data.PlannedFrom}</td>
+            <td>{data.PlannedTo}</td>
+            <td>{data.PlannedUnit}</td>
+            <td>{data.PlannedQuantity}</td>
+            <td>{data.Designation}</td>
+            <td>{data.TrafficRepercussion}</td>
+            <td>{data.DemandedFrom}</td>
+            <td>{data.DemandedTo}</td>
+            <td>{data.GrantedFrom}</td>
+            <td>{data.GrantedTo}</td>
+            <td>{data.AvailedFrom}</td>
+            <td>{data.AvailedTo}</td>
+            <td>{data.Blockdurationdemaned}</td>
+            <td>{data.BlockdurationGranted}</td>
+            <td>{data.BlockdurationAvailed}</td>
+            <td>{data.BlockOutputUnit}</td>
+            <td>{data.BlockOutputQuantity}</td>
+            <td>{data.Remarks}</td>
           </tr>
         ))}
       </tbody>

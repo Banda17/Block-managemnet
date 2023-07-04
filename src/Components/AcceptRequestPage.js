@@ -10,7 +10,7 @@ const AcceptancePage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/Blocks');
+      const response = await axios.get('http://localhost:3000/Blocks');
       setTableData(response.data);
       console.log(response);
     } catch (error) {

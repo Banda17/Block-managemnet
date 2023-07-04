@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -21,19 +22,43 @@ const App = () => {
           />
           <Route
             path="/dashboard"
-            element={user ? <Dashboard user={user} setUser={setUser} /> : <Navigate to="/login" />}
+            element={
+              user && user.role === 'admin' ? (
+                <Dashboard user={user} setUser={setUser} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
           <Route
             path="/table"
-            element={user ? <TablePage user={user} /> : <Navigate to="/login" />}
+            element={
+              user && user.role === 'admin' ? (
+                <TablePage user={user} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
           <Route
             path="/request-block"
-            element={user ? <RequestBlockPage /> : <Navigate to="/login" />}
+            element={
+              user && user.role === 'user' ? (
+                <RequestBlockPage />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
           <Route
             path="/accept"
-            element={user ? <AcceptRequestPage /> : <Navigate to="/login" />}
+            element={
+              user && user.role === 'user' ? (
+                <AcceptRequestPage />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route path="/" element={<Navigate to="/login" />} />

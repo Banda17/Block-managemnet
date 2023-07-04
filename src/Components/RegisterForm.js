@@ -24,9 +24,9 @@ const RegisterForm = () => {
         <div className="mb-3">
           <label htmlFor="role" className="form-label">Role:</label>
           <select className="form-select" id="role" name="role">
-            <option value="user">User</option>
+            <option value="basic">basic</option>
             <option value="admin">Admin</option>
-            <option value="user2">User2</option>
+            <option value="user">User</option>
           </select>
         </div>
 
