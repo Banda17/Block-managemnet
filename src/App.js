@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,7 +6,6 @@ import Dashboard from './Components/dashboard';
 import TablePage from './Components/TablePage';
 import RequestBlockPage from './Components/RequestBlocks';
 import AcceptRequestPage from './Components/AcceptRequestPage';
-
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -23,7 +21,7 @@ const App = () => {
           <Route
             path="/dashboard"
             element={
-              user && user.role === 'admin' ? (
+              user ? (
                 <Dashboard user={user} setUser={setUser} />
               ) : (
                 <Navigate to="/login" />

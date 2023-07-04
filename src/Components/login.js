@@ -1,31 +1,34 @@
-import React, { useState, useCallback } from 'react';
-import axios from 'axios';
-import Dashboard from './dashboard';
+import React, { useState } from 'react';
 
-const Login = ({ setUser, setIsLoggedIn }) => {
+const Login = ({ setUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = useCallback(async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/login', {
-        email,
-        password,
+      // Make a request to your backend server to perform authentication
+      const response = await fetch('http://localhost:3001/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (response.status === 200) {
-        const user = response.data;
+      if (response.ok) {
+        // Authentication successful
+        const user = await response.json();
         setUser(user);
-        setIsLoggedIn(true); // Set isLoggedIn to true after successful login
       } else {
+        // Authentication failed
         console.log('Authentication failed');
       }
     } catch (error) {
       console.log('Error during authentication:', error);
     }
-  }, [email, password, setUser, setIsLoggedIn]);
+  };
 
   return (
     <div>
@@ -55,32 +58,36 @@ const Login = ({ setUser, setIsLoggedIn }) => {
   );
 };
 
-const Register = ({ setUser, setIsLoggedIn }) => {
+const Register = ({ setUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('basic');
 
-  const handleRegister = useCallback(async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/signup', {
-        email,
-        password,
-        role,
+      // Make a request to your backend server to perform registration
+      const response = await fetch('http://localhost:3001/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, role }),
       });
 
-      if (response.status === 200) {
-        const user = response.data;
+      if (response.ok) {
+        // Registration successful
+        const user = await response.json();
         setUser(user);
-        setIsLoggedIn(true); // Set isLoggedIn to true after successful registration
       } else {
+        // Registration failed
         console.log('Registration failed');
       }
     } catch (error) {
       console.log('Error during registration:', error);
     }
-  }, [email, password, role, setUser, setIsLoggedIn]);
+  };
 
   return (
     <div>
@@ -119,30 +126,18 @@ const Register = ({ setUser, setIsLoggedIn }) => {
   );
 };
 
-const LoginForm = ({ setUser, setIsLoggedIn }) => {
+const LoginForm = ({ setUser }) => {
   const [isRegistering, setIsRegistering] = useState(false);
-
-  const setUserCallback = useCallback(
-    (user) => {
-      setUser(user);
-    },
-    [setUser]
-  );
-
-  if (setIsLoggedIn) {
-    // Redirect to the dashboard or any other component after successful login
-    return <Dashboard />;
-  }
 
   return (
     <div>
       {isRegistering ? (
-        <Register setUser={setUserCallback} setIsLoggedIn={setIsLoggedIn} />
+        <Register setUser={setUser} />
       ) : (
-        <Login setUser={setUserCallback} setIsLoggedIn={setIsLoggedIn} />
+        <Login setUser={setUser} />
       )}
       <p>
-        {isRegistering ? 'Already have an account?' : "Don't have an account?"}
+        {isRegistering ? "Already have an account?" : "Don't have an account?"}
         <button onClick={() => setIsRegistering(!isRegistering)}>
           {isRegistering ? 'Login' : 'Register'}
         </button>
