@@ -13,9 +13,10 @@ const Dashboard = ({ user, setUser }) => {
 
   const toggleSubMenu = () => {
     setShowSubMenu(!showSubMenu);
+    
   };
-
-  return (
+ 
+return (
     <div className="dashboard-container">
       <div className="sidebar">
         <ul className="sidebar-menu">

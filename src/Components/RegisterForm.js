@@ -110,9 +110,9 @@ const Register = ({ setUser }) => {
         <label>
           Role:
           <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="basic">Basic</option>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
+            <option value="Engg">Engg</option>
+            <option value="Trd">Trd</option>
+            <option value="S&T">S&T</option>
           </select>
         </label>
         <br />

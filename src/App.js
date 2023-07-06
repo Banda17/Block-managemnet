@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './Components/login';
 import Dashboard from './Components/dashboard';
@@ -14,55 +14,32 @@ const App = () => {
     <Router>
       <div className="container">
         <Routes>
-          <Route
-            path="/login"
-            element={user ? <Navigate to="/dashboard" /> : <Login setUser={setUser} />}
-          />
-         <Route
-  path="/dashboard"
-  element={
-    user && user.role === 'admin' ? (
-      <Dashboard user={user} email={user.email} />
-    ) : (
-      <Navigate to="/login" />
-    )
-  }
-/>
-
-
-          <Route
-            path="/table"
-            element={
-              user && user.role === 'admin' ? (
-                <TablePage user={user} />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-          <Route
-            path="/request-block"
-            element={
-              user && user.role === 'user' ? (
-                <RequestBlockPage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-          <Route
-            path="/accept"
-            element={
-              user && user.role === 'user' ? (
-                <AcceptRequestPage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/dashboard" element={<Dashboard user={user} setUser={setUser} />} />
+          <Route path="/table" element={<TablePage />} />
+          <Route path="/request-block" element={<RequestBlockPage />} />
+          <Route path="/accept" element={<AcceptRequestPage />} />
+          <Route path="/" element={<Login setUser={setUser} />} />
         </Routes>
+
+        {user && (
+          <div className="sidebar">
+            <ul className="sidebar-menu">
+              <li className="menu-item">
+                <Link to="/dashboard">Dashboard</Link>
+              </li>
+              <li className="menu-item">
+                <Link to="/request-block">Request Block</Link>
+              </li>
+              <li className="menu-item">
+                <Link to="/accept">Accept</Link>
+              </li>
+              <li className="menu-item">
+                <Link to="/table">Table</Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </Router>
   );
