@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-//import 'bulma/css/bulma.min.css';
+import 'bulma/css/bulma.min.css';
 
 
 const AcceptancePage = () => {
@@ -12,7 +12,7 @@ const AcceptancePage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/Blocks');
+      const response = await axios.get('http://localhost:3001/accept');
       setTableData(response.data.data);
     } catch (error) {
       console.error('Error:', error.message);
@@ -41,7 +41,7 @@ const AcceptancePage = () => {
   return (
     <div className="table-container">
       <h1>Acceptance Page</h1>
-      <table className="table is-fullwidth" style={{ fontSize: '12px' }}>
+      <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" style={{ fontSize: '12px' }}>
         <thead className="thead-light">
           <tr>
             <th>Date</th>
@@ -77,17 +77,17 @@ const AcceptancePage = () => {
         <tbody>
           {tableData.map((row, index) => (
             <tr key={row._id}>
-              <td>{row.Date}</td>
-              <td>{row['Major Section']}</td>
+              <td>{row.date}</td>
+              <td>{row['majorSection']}</td>
               <td>{row['Block_Section_Station']}</td>
-              <td>{row.Direction}</td>
-              <td>{row["KM  From"]}</td>
-              <td>{row["KM To"]}</td>
-              <td>{row.Dept}</td>
-              <td>{row['Type of Work']}</td>
-              <td>{row['Planned From\n (HH:MM)']}</td>
-              <td>{row['Planned To']}</td>
-              <td>{row["Planned Block Duration\n (in mins)"]}</td>
+              <td>{row.direction}</td>
+              <td>{row["kmFrom"]}</td>
+              <td>{row["kmTo"]}</td>
+              <td>{row.Department}</td>
+              <td>{row['typeOfWork']}</td>
+              <td>{row['plannedBlockFrom']}</td>
+              <td>{row['plannedBlockTo']}</td>
+              <td>{row[" plannedBlockDuration"]}</td>
               <td>
                 <input
                   type="text"

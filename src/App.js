@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './Components/login';
 import Dashboard from './Components/dashboard';
 import TablePage from './Components/TablePage';
@@ -23,8 +22,8 @@ const App = () => {
         </Routes>
 
         {user && (
-          <div className="sidebar">
-            <ul className="sidebar-menu">
+          <div>
+            <ul>
               <li className="menu-item">
                 <Link to="/dashboard">Dashboard</Link>
               </li>

@@ -3,6 +3,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 import RequestBlockPage from './RequestBlocks';
 import AcceptancePage from './AcceptRequestPage';
 import TablePage from './TablePage';
+import 'bulma/css/bulma.min.css'; // Import Bulma CSS
 
 const Dashboard = ({ user, setUser }) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
@@ -13,13 +14,12 @@ const Dashboard = ({ user, setUser }) => {
 
   const toggleSubMenu = () => {
     setShowSubMenu(!showSubMenu);
-    
   };
- 
-return (
-    <div className="dashboard-container">
-      <div className="sidebar">
-        <ul className="sidebar-menu">
+
+  return (
+    <div>
+      <div>
+        <ul>
           <li className="menu-item">
             <Link to="/dashboard">Dashboard</Link>
           </li>
