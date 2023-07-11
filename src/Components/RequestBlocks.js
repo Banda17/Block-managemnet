@@ -1,113 +1,95 @@
 import React, { useState } from 'react';
-import 'bulma/css/bulma.css';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import axios from 'axios';
 
 const RequestBlockPage = () => {
   const [selectedOptions, setSelectedOptions] = useState({
-    date: new Date(),
-    department: '',
-    typeOfWork: '',
-    designation: '',
-    plannedBlockFrom: '',
-    plannedBlockTo: '',
-    plannedBlockDuration: '',
+    date: '',
+    majorSection: '',
+    direction: '',
     kmFrom: '',
     kmTo: '',
-    remarks: ''
+    Department: '',
+    typeOfWork: '',
+    plannedBlockDuration: '',
+    plannedBlockFrom: '',
+    plannedBlockTo: '',
+    plannedUnit: '',
+    plannedQuantity: '',
+    Block_Section_Station: '',
+    blockDurationAvailed: '',
+    blockAvailedFrom: '',
+    blockAvailedTo: '',
+    blockBurst: '',
+    blockDemandedDuration: '',
+    blockDemandedConditions: '',
+    blockGrantedFrom: '',
+    blockGrantedTo: '',
+    blockGrantedDuration: '',
+    blockOutputUnit: '',
+    blockOutputQuantity: '',
+    Remarks: '',
+    trafficRepercussion: '',
+    designation: '',
   });
-
   const [tableRows, setTableRows] = useState([]);
 
   const dropdownOptions = {
     Department: ['Trd', 'SnT', 'Engg'],
     typeOfWork: {
-      'Trd': ['Type A', 'Type B', 'Type C'],
-      'SnT': ['Type X', 'Type Y', 'Type Z'],
-      'Engg': ['Type P', 'Type Q', 'Type R']
+      Trd: ['Type A', 'Type B', 'Type C'],
+      SnT: ['Type X', 'Type Y', 'Type Z'],
+      Engg: ['Type P', 'Type Q', 'Type R'],
     },
-    designation: ['SSE', 'JE', 'Tech']
+    Board: ['Board 1', 'Board 2', 'Board 3'],
+    designation: ['SSE', 'JE', 'Tech'],
+    Station: {
+      'Board 1': ['Station A', 'Station B', 'Station C'],
+      'Board 2': ['Station D', 'Station E', 'Station F'],
+      'Board 3': ['Station G', 'Station H', 'Station I'],
+    },
   };
-  
 
   const handleDropdownChange = (event, dropdownId) => {
     const { value } = event.target;
-  
-    if (dropdownId === 'department') {
-      setSelectedOptions(prevOptions => ({
+
+    if (dropdownId === 'Department') {
+      setSelectedOptions((prevOptions) => ({
         ...prevOptions,
-        department: value,
-        typeOfWork: '' // Reset the typeOfWork field when department changes
+        Department: value,
+        typeOfWork: '', // Reset the typeOfWork field when department changes
       }));
     } else {
-      setSelectedOptions(prevOptions => ({
+      setSelectedOptions((prevOptions) => ({
         ...prevOptions,
-        [dropdownId]: value
+        [dropdownId]: value,
       }));
     }
   };
-  
 
-  const handleAddRow = () => {
-    setTableRows(prevRows => [...prevRows, { ...selectedOptions }]);
-  };
-
-  const handleRowChange = (event, index, fieldName) => {
-    const { value } = event.target;
-
-    setTableRows(prevRows => {
-      const updatedRows = [...prevRows];
-      updatedRows[index][fieldName] = value;
-      return updatedRows;
-    });
-  };
-
-  const handleSubmitRequest = async (e) => {
-    e.preventDefault();
-
-    const requestData = {
-      mainData: {
-        date: selectedOptions.date,
-        department: selectedOptions.department,
-        typeOfWork: selectedOptions.typeOfWork,
-        designation: selectedOptions.designation,
-        plannedBlockFrom: selectedOptions.plannedBlockFrom,
-        plannedBlockTo: selectedOptions.plannedBlockTo,
-        plannedBlockDuration: selectedOptions.plannedBlockDuration,
-        kmFrom: selectedOptions.kmFrom,
-        kmTo: selectedOptions.kmTo,
-        remarks: selectedOptions.remarks
-      },
-      rowsData: tableRows.map(row => ({
-        department: row.department,
-        typeOfWork: row.typeOfWork,
-        designation: row.designation,
-        plannedBlockFrom: row.plannedBlockFrom,
-        plannedBlockTo: row.plannedBlockTo,
-        plannedBlockDuration: row.plannedBlockDuration,
-        kmFrom: row.kmFrom,
-        kmTo: row.kmTo,
-        remarks: row.remarks
-      }))
-    };
+  const handleAddRow = async () => {
+    const newRow = { ...selectedOptions };
 
     try {
-      const response = await axios.post('http://localhost:3001/request', requestData);
-
+      // Make an API request to insert the new row into the database
+      const response = await axios.post('http://localhost:3001/request', newRow);
+      console.log(newRow);
       if (response.status === 200) {
-        const selectedOptions = response.data.mainData;
-        const rowsData = response.data.rowsData;
-        setSelectedOptions(selectedOptions);
-        setTableRows(rowsData);
+        // If the request was successful, add the new row to the table
+        setTableRows((prevRows) => [...prevRows, newRow]);
+        setSelectedOptions((prevOptions) => ({
+          ...prevOptions,
+          Department: '',
+          typeOfWork: '',
+          Block_Section_Station: '',
+        }));
       } else {
-        console.log('Request failed');
+        alert('Request failed');
       }
     } catch (error) {
       console.log('Error during request:', error);
     }
-
-    console.log(selectedOptions);
-    console.log(tableRows);
   };
 
   return (
@@ -116,60 +98,19 @@ const RequestBlockPage = () => {
         <div className="column">
           <h2>Request Block Page</h2>
           <div className="field">
-            <label className="label" htmlFor="department">Department:</label>
+            <label className="label" htmlFor="Department">
+              Department:
+            </label>
             <div className="control">
               <div className="select">
                 <select
-                  id="department"
+                  id="Department"
                   className="input"
-                  value={selectedOptions.department}
-                  onChange={event => handleDropdownChange(event, 'department')}
+                  value={selectedOptions.Department}
+                  onChange={(event) => handleDropdownChange(event, 'Department')}
                 >
                   <option value="">Select a department</option>
-                  {dropdownOptions.Department.map(option => (
-  <option key={option} value={option}>
-    {option}
-  </option>
-))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className="field">
-  <label className="label" htmlFor="typeOfWork">Type of Block:</label>
-  <div className="control">
-    <div className="select">
-      <select
-        id="typeOfWork"
-        className="input"
-        value={selectedOptions.typeOfWork}
-        onChange={event => handleDropdownChange(event, event.target.value)}
-        disabled={!selectedOptions.department}
-      >
-        <option value="">Select a block type</option>
-        {dropdownOptions.typeOfWork[selectedOptions.department]?.map(option => (
-  <option key={option} value={option}>
-    {option}
-  </option>
-))}
-      </select>
-    </div>
-  </div>
-</div>
-
-          <div className="field">
-            <label className="label" htmlFor="designation">Designation:</label>
-            <div className="control">
-              <div className="select">
-                <select
-                  id="designation"
-                  className="input"
-                  value={selectedOptions.designation}
-                  onChange={event => handleDropdownChange(event, 'designation')}
-                >
-                  <option value="">Select a designation</option>
-                  {dropdownOptions.designation.map(option => (
+                  {dropdownOptions.Department.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -180,20 +121,118 @@ const RequestBlockPage = () => {
           </div>
 
           <div className="field">
-            <label className="label" htmlFor="plannedBlockFrom">Start Date:</label>
+            <label className="label" htmlFor="typeOfWork">
+              Type of Block:
+            </label>
+            <div className="control">
+              <div className="select">
+                <select
+                  id="typeOfWork"
+                  className="input"
+                  value={selectedOptions.typeOfWork}
+                  onChange={(event) => handleDropdownChange(event, 'typeOfWork')}
+                  disabled={!selectedOptions.Department}
+                >
+                  <option value="">Select a block type</option>
+                  {dropdownOptions.typeOfWork[selectedOptions.Department]?.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="field">
+            <label className="label" htmlFor="Board">
+              Board:
+            </label>
+            <div className="control">
+              <div className="select">
+                <select
+                  id="Board"
+                  className="input"
+                  value={selectedOptions.Board}
+                  onChange={(event) => handleDropdownChange(event, 'Board')}
+                >
+                  <option value="">Select a Board</option>
+                  {dropdownOptions.Board.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="field">
+            <label className="label" htmlFor="Block_Section_Station">
+              Station/Section:
+            </label>
+            <div className="control">
+              <div className="select">
+                <select
+                  id="Block_Section_Station"
+                  className="input"
+                  value={selectedOptions.Block_Section_Station}
+                  onChange={(event) => handleDropdownChange(event, 'Block_Section_Station')}
+                  disabled={!selectedOptions.Board}
+                >
+                  <option value="">Select a Station/Section</option>
+                  {dropdownOptions.Station[selectedOptions.Board]?.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="field">
+            <label className="label" htmlFor="designation">
+              Designation:
+            </label>
+            <div className="control">
+              <div className="select">
+                <select
+                  id="designation"
+                  className="input"
+                  value={selectedOptions.designation}
+                  onChange={(event) => handleDropdownChange(event, 'designation')}
+                >
+                  <option value="">Select a designation</option>
+                  {dropdownOptions.designation.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="field">
+            <label className="label" htmlFor="date">
+              Date:
+            </label>
             <div className="control">
               <input
                 type="date"
-                id="plannedBlockFrom"
+                id="date"
                 className="input"
                 value={moment(selectedOptions.date).format('YYYY-MM-DD')}
-                onChange={event => handleDropdownChange(event, 'date')}
+                onChange={(event) => handleDropdownChange(event, 'date')}
               />
             </div>
           </div>
 
           <div className="field">
-            <label className="label" htmlFor="plannedBlockTo">End Date:</label>
+            <label className="label" htmlFor="plannedBlockTo">
+              End Date:
+            </label>
             <div className="control">
               <input
                 type="date"
@@ -202,58 +241,66 @@ const RequestBlockPage = () => {
                 value={selectedOptions.plannedBlockTo}
                 min={moment(selectedOptions.date).format('YYYY-MM-DD')}
                 max={moment(selectedOptions.date).add(1, 'weeks').format('YYYY-MM-DD')}
-                onChange={event => handleDropdownChange(event, 'plannedBlockTo')}
+                onChange={(event) => handleDropdownChange(event, 'plannedBlockTo')}
               />
             </div>
           </div>
 
           <div className="field">
-            <label className="label" htmlFor="plannedBlockDuration">Hour:</label>
+            <label className="label" htmlFor="plannedBlockDuration">
+              Hour:
+            </label>
             <div className="control">
               <input
                 type="text"
                 id="plannedBlockDuration"
                 className="input"
                 value={selectedOptions.plannedBlockDuration}
-                onChange={event => handleDropdownChange(event, 'plannedBlockDuration')}
+                onChange={(event) => handleDropdownChange(event, 'plannedBlockDuration')}
               />
             </div>
           </div>
 
           <div className="field">
-            <label className="label" htmlFor="kmFrom">Km From:</label>
+            <label className="label" htmlFor="kmFrom">
+              Km From:
+            </label>
             <div className="control">
               <input
                 type="text"
                 id="kmFrom"
                 className="input"
                 value={selectedOptions.kmFrom}
-                onChange={event => handleDropdownChange(event, 'kmFrom')}
+                onChange={(event) => handleDropdownChange(event, 'kmFrom')}
               />
             </div>
           </div>
 
           <div className="field">
-            <label className="label" htmlFor="kmTo">Km To:</label>
+            <label className="label" htmlFor="kmTo">
+              Km To:
+            </label>
             <div className="control">
               <input
                 type="text"
                 id="kmTo"
                 className="input"
                 value={selectedOptions.kmTo}
-                onChange={event => handleDropdownChange(event, 'kmTo')}
+                onChange={(event) => handleDropdownChange(event, 'kmTo')}
               />
             </div>
           </div>
 
           <div className="field">
-            <label className="label" htmlFor="remarks">Remarks:</label>
+            <label className="label" htmlFor="Remarks">
+              Remarks:
+            </label>
             <div className="control">
               <textarea
-                id="remarks"
+                id="Remarks"
                 className="textarea"
-                value={selectedOptions.remarks}
-                onChange={event => handleDropdownChange(event, 'remarks')}
+                value={selectedOptions.Remarks}
+                onChange={(event) => handleDropdownChange(event, 'Remarks')}
               ></textarea>
             </div>
           </div>
@@ -271,6 +318,7 @@ const RequestBlockPage = () => {
               <tr>
                 <th>Department</th>
                 <th>Type of Block</th>
+                <th>Station/Section</th>
                 <th>Designation</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -283,86 +331,21 @@ const RequestBlockPage = () => {
             <tbody>
               {tableRows.map((row, index) => (
                 <tr key={index}>
-                  <td>
-                    <input
-                      type="text"
-                      value={row.department}
-                      onChange={event => handleRowChange(event, index, 'department')}
-                      className="input"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={row.typeOfWork}
-                      onChange={event => handleRowChange(event, index, 'typeOfWork')}
-                      className="input"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={row.designation}
-                      onChange={event => handleRowChange(event, index, 'designation')}
-                      className="input"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={row.date}
-                      onChange={event => handleRowChange(event, index, 'date')}
-                      className="input"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={row.plannedBlockTo}
-                      onChange={event => handleRowChange(event, index, 'plannedBlockTo')}
-                      className="input"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={row.plannedBlockDuration}
-                      onChange={event => handleRowChange(event, index, 'plannedBlockDuration')}
-                      className="input"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={row.kmFrom}
-                      onChange={event => handleRowChange(event, index, 'kmFrom')}
-                      className="input"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={row.kmTo}
-                      onChange={event => handleRowChange(event, index, 'kmTo')}
-                      className="input"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={row.remarks}
-                      onChange={event => handleRowChange(event, index, 'remarks')}
-                      className="input"
-                    />
-                  </td>
+                  <td>{row.Department}</td>
+                  <td>{row.typeOfWork}</td>
+                  <td>{row.Block_Section_Station}</td>
+                  <td>{row.designation}</td>
+                  <td>{moment(row.date).format('YYYY-MM-DD')}</td>
+                  <td>{row.plannedBlockTo}</td>
+                  <td>{row.plannedBlockDuration}</td>
+                  <td>{row.kmFrom}</td>
+                  <td>{row.kmTo}</td>
+                  <td>{row.Remarks}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-
-          <button className="button is-primary" onClick={handleSubmitRequest}>
-            Submit
-          </button>
+          <Link className="button is-primary" to="/accept">Next</Link>
         </div>
       </div>
     </div>
