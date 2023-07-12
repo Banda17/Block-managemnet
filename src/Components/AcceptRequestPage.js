@@ -61,16 +61,28 @@ const AcceptancePage = () => {
   };
 
   const calculateDuration = (fromTime, toTime) => {
-    // Calculate duration in minutes
     const from = fromTime.split(':');
     const to = toTime.split(':');
     const fromHours = parseInt(from[0]);
     const fromMinutes = parseInt(from[1]);
     const toHours = parseInt(to[0]);
     const toMinutes = parseInt(to[1]);
-    const durationHours = toHours - fromHours;
-    const durationMinutes = toMinutes - fromMinutes;
-    const totalDuration = durationHours * 60 + durationMinutes; // Duration in minutes
+  
+    let durationHours = toHours - fromHours;
+    let durationMinutes = toMinutes - fromMinutes;
+  
+    if (durationHours < 0) {
+      // Adjust for negative duration when the toTime is less than the fromTime
+      durationHours += 24;
+    }
+  
+    if (durationMinutes < 0) {
+      // Adjust for negative duration when the toTime is less than the fromTime
+      durationHours -= 1;
+      durationMinutes += 60;
+    }
+  
+    const totalDuration = durationHours * 60 + durationMinutes;
     return totalDuration;
   };
 
@@ -92,15 +104,16 @@ const AcceptancePage = () => {
 
   return (
     <div className="table-container">
-    <div className='section'>
-    <Link to="/dashboard">Back to Dashboard</Link>
-    <button className="button is-danger"onClick={downloadExcel}>Download as Excel</button>
-    </div>
+      <div className='section'>
+        <Link className="column is-one-quarter " to="/dashboard">Back to Dashboard</Link>
+        <button className="button is-danger" onClick={downloadExcel}>Download as Excel</button>
+      </div>
       <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" style={{ fontSize: '12px' }}>
         {/* Table headers */}
         <thead className="thead-light">
           <tr>
             <th>Date</th>
+            <th>Status</th>
             <th>Block Station/Section</th>
             <th>Direction</th>
             <th>Km From</th>
@@ -132,6 +145,7 @@ const AcceptancePage = () => {
           {tableData.map((row, index) => (
             <tr key={row._id}>
               <td>{row.date}</td>
+              <td>{row.status}</td>
               <td>{row.Block_Section_Station}</td>
               <td>{row.direction}</td>
               <td>{row.kmFrom}</td>
@@ -170,8 +184,8 @@ const AcceptancePage = () => {
               <td>
                 <input
                   type="text"
-                  value={row.trafficRepurctions}
-                  onChange={(event) => handleFieldChange(event, index, 'trafficRepurctions')}
+                  value={row.trafficRepercussion}
+                  onChange={(event) => handleFieldChange(event, index, 'trafficRepercussion')}
                 />
               </td>
               <td>

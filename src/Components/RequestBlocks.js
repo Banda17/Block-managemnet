@@ -32,6 +32,7 @@ const RequestBlockPage = () => {
     Remarks: '',
     trafficRepercussion: '',
     designation: '',
+    status: '',
   });
   const [tableRows, setTableRows] = useState([]);
 
@@ -49,6 +50,7 @@ const RequestBlockPage = () => {
       'Board 2': ['Station D', 'Station E', 'Station F'],
       'Board 3': ['Station G', 'Station H', 'Station I'],
     },
+    status: ['OpenLine', 'RVNL', 'Construction'],
   };
 
   const handleDropdownChange = (event, dropdownId) => {
@@ -58,7 +60,7 @@ const RequestBlockPage = () => {
       setSelectedOptions((prevOptions) => ({
         ...prevOptions,
         Department: value,
-        typeOfWork: '', // Reset the typeOfWork field when department changes
+        typeOfWork: '',
       }));
     } else {
       setSelectedOptions((prevOptions) => ({
@@ -72,17 +74,16 @@ const RequestBlockPage = () => {
     const newRow = { ...selectedOptions };
 
     try {
-      // Make an API request to insert the new row into the database
       const response = await axios.post('http://localhost:3001/request', newRow);
       console.log(newRow);
       if (response.status === 200) {
-        // If the request was successful, add the new row to the table
         setTableRows((prevRows) => [...prevRows, newRow]);
         setSelectedOptions((prevOptions) => ({
           ...prevOptions,
           Department: '',
           typeOfWork: '',
           Block_Section_Station: '',
+          status: '',
         }));
       } else {
         alert('Request failed');
@@ -305,6 +306,29 @@ const RequestBlockPage = () => {
             </div>
           </div>
 
+          <div className="field">
+            <label className="label" htmlFor="status">
+              Status:
+            </label>
+            <div className="control">
+              <div className="select">
+                <select
+                  id="status"
+                  className="input"
+                  value={selectedOptions.status}
+                  onChange={(event) => handleDropdownChange(event, 'status')}
+                >
+                  <option value="">Select a status</option>
+                  {dropdownOptions.status.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
           <button className="button is-primary" onClick={handleAddRow}>
             Add Row
           </button>
@@ -326,6 +350,7 @@ const RequestBlockPage = () => {
                 <th>Km From</th>
                 <th>Km To</th>
                 <th>Remarks</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -341,6 +366,7 @@ const RequestBlockPage = () => {
                   <td>{row.kmFrom}</td>
                   <td>{row.kmTo}</td>
                   <td>{row.Remarks}</td>
+                  <td>{row.status}</td>
                 </tr>
               ))}
             </tbody>
