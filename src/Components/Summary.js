@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { duration } from "time-duration";
 import 'bulma/css/bulma.min.css';
+import { exportTableToExcel } from './exportTableToExcel';
 
 const SummaryPage = () => {
   const [lines, setLines] = useState([]);
@@ -15,7 +15,6 @@ const SummaryPage = () => {
     try {
       const response = await axios.get('http://localhost:3001/accept');
       const data = response.data.data;
-      console.log(data);
       setLines(data);
       setIsLoading(false);
     } catch (error) {
@@ -40,14 +39,13 @@ const SummaryPage = () => {
 
   const renderBlockData = (lines, uniqueDates) => {
     
-    function timeConvert(n) {
-      var num = n;
-      var hours = (num / 60);
-      var rhours = Math.floor(hours);
-      var minutes = (hours - rhours) * 60;
-      var rminutes = Math.round(minutes);
-      return num + " minutes = " + rhours + " hour(s) and " + rminutes + " minute(s).";
-      }
+   
+
+    const timeConvert = (minutes) => {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return `${hours.toString().padStart(2, '0')}:${remainingMinutes.toString().padStart(2, '0')}`;
+    };
       
 
     return (
@@ -76,45 +74,45 @@ const SummaryPage = () => {
           const sntGrantedBlocksCount = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'SnT' | line.blockDurationAvailed && line.status === 'openline' ? 1 : 0),
+              (line.Department === 'SnT' && line.blockDurationAvailed && line.status === 'OpenLine' ? 1 : 0),
             0
           );
           const trdGrantedBlocksCount = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Trd' | line.blockDurationAvailed && line.status === 'openline' ? 1 : 0),
+              (line.Department === 'Trd' && line.blockDurationAvailed && line.status === 'OpenLine' ? 1 : 0),
             0
           );
           const enggGrantedBlocksCount = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Engg' | line.blockDurationAvailed && line.status === 'openline' ? 1 : 0),
+              (line.Department === 'Engg' && line.blockDurationAvailed && line.status === 'OpenLine' ? 1 : 0),
             0
           );
   
           const sntAvailedBlocksCount = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'SnT' && line.blockDemandedDuration && line.status === 'openline' ? 1 : 0),
+              (line.Department === 'SnT' && line.blockDemandedDuration && line.status === 'OpenLine' ? 1 : 0),
             0
           );
           const trdAvailedBlocksCount = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Trd' && line.blockDemandedDuration && line.status === 'openline' ? 1 : 0),
+              (line.Department === 'Trd' && line.blockDemandedDuration && line.status === 'OpenLine' ? 1 : 0),
             0
           );
           const enggAvailedBlocksCount = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Engg' && line.blockDemandedDuration && line.status === 'openline' ? 1 : 0),
+              (line.Department === 'Engg' && line.blockDemandedDuration && line.status === 'OpenLine' ? 1 : 0),
             0
           );
   
           const sntTotalDurationGranted = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'SnT' && line.blockGrantedDuration && line.status === 'openline'
+              (line.Department === 'SnT' && line.blockGrantedDuration && line.status === 'OpenLine'
                 ? line.blockGrantedDuration
                 : 0),
             0
@@ -122,7 +120,7 @@ const SummaryPage = () => {
           const trdTotalDurationGranted = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Trd' && line.blockGrantedDuration && line.status === 'openline'
+              (line.Department === 'Trd' && line.blockGrantedDuration && line.status === 'OpenLine'
                 ? line.blockGrantedDuration
                 : 0),
             0
@@ -130,7 +128,7 @@ const SummaryPage = () => {
           const enggTotalDurationGranted = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Engg' && line.blockGrantedDuration && line.status === 'openline'
+              (line.Department === 'Engg' && line.blockGrantedDuration && line.status === 'OpenLine'
                 ? line.blockGrantedDuration
                 : 0),
             0
@@ -139,7 +137,7 @@ const SummaryPage = () => {
           const sntTotalDurationAvailed = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'SnT' && line.blockDurationAvailed && line.status === 'openline'
+              (line.Department === 'SnT' && line.blockDurationAvailed && line.status === 'OpenLine'
                 ? line.blockDurationAvailed
                 : 0),
             0
@@ -147,7 +145,7 @@ const SummaryPage = () => {
           const trdTotalDurationAvailed = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Trd' && line.blockDurationAvailed && line.status === 'openline'
+              (line.Department === 'Trd' && line.blockDurationAvailed && line.status === 'OpenLine'
                 ? line.blockDurationAvailed
                 : 0),
             0
@@ -155,7 +153,7 @@ const SummaryPage = () => {
           const enggTotalDurationAvailed = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Engg' && line.blockDurationAvailed && line.status === 'openline'
+              (line.Department === 'Engg' && line.blockDurationAvailed && line.status === 'OpenLine'
                 ? line.blockDurationAvailed
                 : 0),
             0
@@ -164,7 +162,7 @@ const SummaryPage = () => {
           const sntTotalDurationDemanded = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'SnT' && line.blockDemandedDuration && line.status === 'openline'
+              (line.Department === 'SnT' && line.blockDemandedDuration && line.status === 'OpenLine'
                 ? line.blockDemandedDuration
                 : 0),
             0
@@ -172,93 +170,94 @@ const SummaryPage = () => {
           const trdTotalDurationDemanded = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Trd' && line.blockDemandedDuration && line.status === 'openline'
+              ((line.Department === 'Trd' && line.blockDemandedDuration) && line.status === 'OpenLine'
                 ? line.blockDemandedDuration
                 : 0),
-            0
+            1
           );
+          console.log(trdTotalDurationDemanded);
           const enggTotalDurationDemanded = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Engg' && line.blockDemandedDuration && line.status === 'openline'
+              (line.Department === 'Engg' && line.blockDemandedDuration && line.status === 'OpenLine'
                 ? line.blockDemandedDuration
                 : 0),
             0
           );
   
-          const sntTotalHoursGranted =Math.floor(sntTotalDurationGranted / 60); // Convert minutes to hours
-          const trdTotalHoursGranted =Math.floor(trdTotalDurationGranted / 60); // Convert minutes to hours
-          const enggTotalHoursGranted =Math.floor(enggTotalDurationGranted / 60); // Convert minutes to hours
+          const sntTotalHoursGranted =(sntTotalDurationGranted ); 
+          const trdTotalHoursGranted =(trdTotalDurationGranted ); 
+          const enggTotalHoursGranted =(enggTotalDurationGranted ); 
   
-          const sntTotalHoursAvailed =Math.floor(sntTotalDurationAvailed / 60); // Convert minutes to hours
-          const trdTotalHoursAvailed =Math.floor(trdTotalDurationAvailed / 60); // Convert minutes to hours
-          const enggTotalHoursAvailed =Math.floor(enggTotalDurationAvailed / 60); // Convert minutes to hours
+          const sntTotalHoursAvailed =(sntTotalDurationAvailed ); 
+          const trdTotalHoursAvailed =(trdTotalDurationAvailed ); 
+          const enggTotalHoursAvailed =(enggTotalDurationAvailed ); 
   
-          const sntTotalHoursDemanded =Math.floor(sntTotalDurationDemanded / 60); // Convert minutes to hours
-          const trdTotalHoursDemanded =Math.floor(trdTotalDurationDemanded / 60); // Convert minutes to hours
-          const enggTotalHoursDemanded =Math.floor(enggTotalDurationDemanded / 60); // Convert minutes to hours
-
+          const sntTotalHoursDemanded =(sntTotalDurationDemanded ); 
+          const trdTotalHoursDemanded =(trdTotalDurationDemanded ); 
+          const enggTotalHoursDemanded =(enggTotalDurationDemanded ); 
+         
           const sntBlocksCount3 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'SnT' && line.blockGrantedDuration && line.status === 'construction' ? 1 : 0),
+              (line.Department === 'SnT' && line.blockGrantedDuration && line.status === 'Construction' ? 1 : 0),
             0
           );
           const trdBlocksCount3 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Trd' && line.blockGrantedDuration && line.status === 'construction' ? 1 : 0),
+              (line.Department === 'Trd' && line.blockGrantedDuration && line.status === 'Construction' ? 1 : 0),
             0
           );
           const enggBlocksCount3 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Engg' && line.blockGrantedDuration && line.status === 'construction' ? 1 : 0),
+              (line.Department === 'Engg' && line.blockGrantedDuration && line.status === 'Construction' ? 1 : 0),
             0
           );
   
           const sntGrantedBlocksCount3 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'SnT' | line.blockDurationAvailed && line.status === 'construction' ? 1 : 0),
+              (line.Department === 'SnT' | line.blockDurationAvailed && line.status === 'Construction' ? 1 : 0),
             0
           );
           const trdGrantedBlocksCount3 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Trd' | line.blockDurationAvailed && line.status === 'construction' ? 1 : 0),
+              (line.Department === 'Trd' | line.blockDurationAvailed && line.status === 'Construction' ? 1 : 0),
             0
           );
           const enggGrantedBlocksCount3 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Engg' | line.blockDurationAvailed && line.status === 'construction' ? 1 : 0),
+              (line.Department === 'Engg' | line.blockDurationAvailed && line.status === 'Construction' ? 1 : 0),
             0
           );
   
           const sntAvailedBlocksCount3 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'SnT' && line.blockDemandedDuration && line.status === 'construction' ? 1 : 0),
+              (line.Department === 'SnT' && line.blockDemandedDuration && line.status === 'Construction' ? 1 : 0),
             0
           );
           const trdAvailedBlocksCount3 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Trd' && line.blockDemandedDuration && line.status === 'construction' ? 1 : 0),
+              (line.Department === 'Trd' && line.blockDemandedDuration && line.status === 'Construction' ? 1 : 0),
             0
           );
           const enggAvailedBlocksCount3 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Engg' && line.blockDemandedDuration && line.status === 'construction' ? 1 : 0),
+              (line.Department === 'Engg' && line.blockDemandedDuration && line.status === 'Construction' ? 1 : 0),
             0
           );
   
           const sntTotalDurationGranted3 = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'SnT' && line.blockGrantedDuration && line.status === 'construction'
+              (line.Department === 'SnT' && line.blockGrantedDuration && line.status === 'Construction'
                 ? line.blockGrantedDuration
                 : 0),
             0
@@ -266,7 +265,7 @@ const SummaryPage = () => {
           const trdTotalDurationGranted3 = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Trd' && line.blockGrantedDuration && line.status === 'construction'
+              (line.Department === 'Trd' && line.blockGrantedDuration && line.status === 'Construction'
                 ? line.blockGrantedDuration
                 : 0),
             0
@@ -274,7 +273,7 @@ const SummaryPage = () => {
           const enggTotalDurationGranted3 = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Engg' && line.blockGrantedDuration && line.status === 'construction'
+              (line.Department === 'Engg' && line.blockGrantedDuration && line.status === 'Construction'
                 ? line.blockGrantedDuration
                 : 0),
             0
@@ -283,7 +282,7 @@ const SummaryPage = () => {
           const sntTotalDurationAvailed3 = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'SnT' && line.blockDurationAvailed && line.status === 'construction'
+              (line.Department === 'SnT' && line.blockDurationAvailed && line.status === 'Construction'
                 ? line.blockDurationAvailed
                 : 0),
             0
@@ -291,7 +290,7 @@ const SummaryPage = () => {
           const trdTotalDurationAvailed3 = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Trd' && line.blockDurationAvailed && line.status === 'construction'
+              (line.Department === 'Trd' && line.blockDurationAvailed && line.status === 'Construction'
                 ? line.blockDurationAvailed
                 : 0),
             0
@@ -299,7 +298,7 @@ const SummaryPage = () => {
           const enggTotalDurationAvailed3 = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Engg' && line.blockDurationAvailed && line.status === 'construction'
+              (line.Department === 'Engg' && line.blockDurationAvailed && line.status === 'Construction'
                 ? line.blockDurationAvailed
                 : 0),
             0
@@ -308,7 +307,7 @@ const SummaryPage = () => {
           const sntTotalDurationDemanded3 = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'SnT' && line.blockDemandedDuration && line.status === 'construction'
+              (line.Department === 'SnT' && line.blockDemandedDuration && line.status === 'Construction'
                 ? line.blockDemandedDuration
                 : 0),
             0
@@ -316,7 +315,7 @@ const SummaryPage = () => {
           const trdTotalDurationDemanded3 = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Trd' && line.blockDemandedDuration && line.status === 'construction'
+              (line.Department === 'Trd' && line.blockDemandedDuration && line.status === 'Construction'
                 ? line.blockDemandedDuration
                 : 0),
             0
@@ -324,23 +323,26 @@ const SummaryPage = () => {
           const enggTotalDurationDemanded3 = filteredLines.reduce(
             (total, line) =>
               total +
-              (line.Department === 'Engg' && line.blockDemandedDuration && line.status === 'construction'
+              (line.Department === 'Engg' && line.blockDemandedDuration && line.status === 'Construction'
                 ? line.blockDemandedDuration
                 : 0),
             0
           );
   
-          const sntTotalHoursGranted3 =Math.floor(sntTotalDurationGranted3 / 60); // Convert minutes to hours
-          const trdTotalHoursGranted3 =Math.floor(trdTotalDurationGranted3 / 60); // Convert minutes to hours
-          const enggTotalHoursGranted3 =Math.floor(enggTotalDurationGranted3 / 60); // Convert minutes to hours
+          const sntTotalHoursGranted3 =(sntTotalDurationGranted3 ); 
+          const trdTotalHoursGranted3 =(trdTotalDurationGranted3 ); 
+          const enggTotalHoursGranted3 =(enggTotalDurationGranted3 ); 
   
-          const sntTotalHoursAvailed3 =Math.floor(sntTotalDurationAvailed3 / 60); // Convert minutes to hours
-          const trdTotalHoursAvailed3 =Math.floor(trdTotalDurationAvailed3 / 60); // Convert minutes to hours
-          const enggTotalHoursAvailed3 =Math.floor(enggTotalDurationAvailed3 / 60); // Convert minutes to hours
+          const sntTotalHoursAvailed3 =(sntTotalDurationAvailed3 ); 
+          const trdTotalHoursAvailed3 =(trdTotalDurationAvailed3 ); 
+          const enggTotalHoursAvailed3 =(enggTotalDurationAvailed3 ); 
   
-          const sntTotalHoursDemanded3 =Math.floor(sntTotalDurationDemanded3 / 60); // Convert minutes to hours
-          const trdTotalHoursDemanded3 =Math.floor(trdTotalDurationDemanded3 / 60); // Convert minutes to hours
-          const enggTotalHoursDemanded3 =Math.floor(enggTotalDurationDemanded3 / 60); // Convert minutes to hours
+          const sntTotalHoursDemanded3 =(sntTotalDurationDemanded3 ); 
+          console.log(sntTotalDurationDemanded3)
+          const trdTotalHoursDemanded3 =(trdTotalDurationDemanded3 );
+          console.log(trdTotalDurationDemanded3) 
+          const enggTotalHoursDemanded3 =(enggTotalDurationDemanded3 );
+          console.log(enggTotalHoursDemanded3) 
 
           const sntBlocksCount2 = filteredLines.reduce(
             (count, line) =>
@@ -364,19 +366,19 @@ const SummaryPage = () => {
           const sntGrantedBlocksCount2 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'SnT' | line.blockDurationAvailed && line.status === 'RVNL' ? 1 : 0),
+              ((line.Department === 'SnT'  || line.blockDurationAvailed) && line.status === 'RVNL' ? 1 : 0),
             0
           );
           const trdGrantedBlocksCount2 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Trd' | line.blockDurationAvailed && line.status === 'RVNL' ? 1 : 0),
+              ((line.Department === 'Trd' || line.blockDurationAvailed) && line.status === 'RVNL' ? 1 : 0),
             0
           );
           const enggGrantedBlocksCount2 = filteredLines.reduce(
             (count, line) =>
               count +
-              (line.Department === 'Engg' | line.blockDurationAvailed && line.status === 'RVNL' ? 1 : 0),
+              ((line.Department === 'Engg' || line.blockDurationAvailed) && line.status === 'RVNL' ? 1 : 0),
             0
           );
   
@@ -474,23 +476,25 @@ const SummaryPage = () => {
             0
           );
   
-          const sntTotalHoursGranted2 =Math.floor(sntTotalDurationGranted2 / 60); // Convert minutes to hours
-          const trdTotalHoursGranted2 =Math.floor(trdTotalDurationGranted2 / 60); // Convert minutes to hours
-          const enggTotalHoursGranted2 =Math.floor(enggTotalDurationGranted2 / 60); // Convert minutes to hours
+          const sntTotalHoursGranted2 =(sntTotalDurationGranted2 ); 
+          const trdTotalHoursGranted2 =(trdTotalDurationGranted2 ); 
+          const enggTotalHoursGranted2 =(enggTotalDurationGranted2 ); 
   
-          const sntTotalHoursAvailed2 =Math.floor(sntTotalDurationAvailed2 / 60); // Convert minutes to hours
-          const trdTotalHoursAvailed2 =Math.floor(trdTotalDurationAvailed2 / 60); // Convert minutes to hours
-          const enggTotalHoursAvailed2 =Math.floor(enggTotalDurationAvailed2 / 60); // Convert minutes to hours
+          const sntTotalHoursAvailed2 =(sntTotalDurationAvailed2 ); 
+          const trdTotalHoursAvailed2 =(trdTotalDurationAvailed2 ); 
+          const enggTotalHoursAvailed2 =(enggTotalDurationAvailed2 ); 
   
-          const sntTotalHoursDemanded2 =Math.floor(sntTotalDurationDemanded2 / 60); // Convert minutes to hours
-          const trdTotalHoursDemanded2 =Math.floor(trdTotalDurationDemanded2 / 60); // Convert minutes to hours
-          const enggTotalHoursDemanded2 =Math.floor(enggTotalDurationDemanded2 / 60); // Convert minutes to hours
+          const sntTotalHoursDemanded2 =(sntTotalDurationDemanded2 ); 
+          const trdTotalHoursDemanded2 =(trdTotalDurationDemanded2 ); 
+          const enggTotalHoursDemanded2 =(enggTotalDurationDemanded2 ); 
 
           const totalA = sntAvailedBlocksCount + trdAvailedBlocksCount + enggAvailedBlocksCount +sntAvailedBlocksCount2 + trdAvailedBlocksCount2 + enggAvailedBlocksCount2 + sntAvailedBlocksCount3 + trdAvailedBlocksCount3 + enggAvailedBlocksCount3;
           const totalG = sntGrantedBlocksCount + trdGrantedBlocksCount + enggGrantedBlocksCount + sntGrantedBlocksCount2 + trdGrantedBlocksCount2 + enggGrantedBlocksCount2 + sntGrantedBlocksCount3 + trdGrantedBlocksCount3 + enggGrantedBlocksCount3; 
           const totalD = sntBlocksCount + trdBlocksCount + enggBlocksCount + sntBlocksCount2 + trdBlocksCount2 + enggBlocksCount2 + sntBlocksCount3 + trdBlocksCount3 + enggBlocksCount3;
 
-          const DurationA = (sntTotalDurationAvailed + trdTotalDurationAvailed + enggTotalDurationAvailed + sntTotalDurationAvailed2 + trdTotalDurationAvailed2 + enggTotalDurationAvailed2 + sntTotalDurationAvailed3 + trdTotalDurationAvailed3 + enggTotalDurationAvailed3);
+          const DurationA = parseInt(sntTotalDurationAvailed) + parseInt(trdTotalDurationAvailed) + parseInt(enggTotalDurationAvailed) + parseInt(sntTotalDurationAvailed2) + parseInt(trdTotalDurationAvailed2) + parseInt(enggTotalDurationAvailed2) + parseInt(sntTotalDurationAvailed3) + parseInt(trdTotalDurationAvailed3) + parseInt(enggTotalDurationAvailed3);
+          const DurationG = parseInt(sntTotalDurationGranted) + parseInt(trdTotalDurationGranted) + parseInt(enggTotalHoursGranted) + parseInt(sntTotalDurationGranted2) + parseInt(trdTotalDurationGranted2) + parseInt(enggTotalHoursGranted2) + parseInt(sntTotalDurationGranted3) + parseInt(trdTotalDurationGranted3) + parseInt(enggTotalHoursGranted3);
+          const DurationD = parseInt(sntTotalDurationDemanded) + parseInt(trdTotalDurationDemanded) + parseInt(enggTotalDurationDemanded) + parseInt(sntTotalDurationDemanded2) + parseInt(trdTotalDurationDemanded2) + parseInt(enggTotalDurationDemanded2) + parseInt(sntTotalDurationDemanded3) + parseInt(trdTotalDurationDemanded3) + parseInt(enggTotalDurationDemanded3);
           return (
             <React.Fragment key={date}>
               <tr>
@@ -500,78 +504,80 @@ const SummaryPage = () => {
                 <td rowSpan=""></td>
                 <td>Granted</td>
                 <td>{sntGrantedBlocksCount}</td>
-                <td>{sntTotalHoursGranted}h</td>
+                <td>{timeConvert(sntTotalHoursGranted)}h</td>
                 <td>{trdGrantedBlocksCount}</td>
-                <td>{trdTotalHoursGranted}h</td>
+                <td>{timeConvert(trdTotalHoursGranted)}h</td>
                 <td>{enggGrantedBlocksCount}</td>
-                <td>{enggTotalHoursGranted}h</td>
+                <td>{timeConvert(enggTotalHoursGranted)}h</td>
           
                 <td>{sntGrantedBlocksCount2}</td>
-                <td>{sntTotalHoursGranted2}h</td>
+                <td>{timeConvert(sntTotalHoursGranted2)}h</td>
                 <td>{trdGrantedBlocksCount2}</td>
-                <td>{trdTotalHoursGranted2}h</td>
+                <td>{timeConvert(trdTotalHoursGranted2)}h</td>
                 <td>{enggGrantedBlocksCount2}</td>
-                <td>{enggTotalHoursGranted2}h</td>
+                <td>{timeConvert(enggTotalHoursGranted2)}h</td>
 
                 <td>{sntGrantedBlocksCount3}</td>
-                <td>{sntTotalHoursGranted3}h</td>
+                <td>{timeConvert(sntTotalHoursGranted3)}h</td>
                 <td>{trdGrantedBlocksCount3}</td>
-                <td>{trdTotalHoursGranted3}h</td>
+                <td>{timeConvert(trdTotalHoursGranted3)}h</td>
                 <td>{enggGrantedBlocksCount3}</td>
-                <td>{enggTotalHoursGranted3}h</td>
+                <td>{timeConvert(enggTotalHoursGranted3)}h</td>
                 <td>{totalG}</td>
+                <td>{timeConvert(DurationG)}</td>
                 
               </tr>
               <tr>
                 <td rowSpan=""></td>
                 <td>Availed</td>
                 <td>{sntAvailedBlocksCount}</td>
-                <td>{sntTotalHoursAvailed}h</td>
+                <td>{timeConvert(sntTotalHoursAvailed)}h</td>
                 <td>{trdAvailedBlocksCount}</td>
-                <td>{trdTotalHoursAvailed}h</td>
+                <td>{timeConvert(trdTotalHoursAvailed)}h</td>
                 <td>{enggAvailedBlocksCount}</td>
-                <td>{enggTotalHoursAvailed}h</td>
+                <td>{timeConvert(enggTotalHoursAvailed)}h</td>
                 
                 <td>{sntAvailedBlocksCount2}</td>
-                <td>{sntTotalHoursAvailed2}h</td>
+                <td>{timeConvert(sntTotalHoursAvailed2)}h</td>
                 <td>{trdAvailedBlocksCount2}</td>
-                <td>{trdTotalHoursAvailed2}h</td>
+                <td>{timeConvert(trdTotalHoursAvailed2)}h</td>
                 <td>{enggAvailedBlocksCount2}</td>
-                <td>{enggTotalHoursAvailed2}h</td>
+                <td>{timeConvert(enggTotalHoursAvailed2)}h</td>
 
                 <td>{sntAvailedBlocksCount3}</td>
-                <td>{sntTotalHoursAvailed3}h</td>
+                <td>{timeConvert(sntTotalHoursAvailed3)}h</td>
                 <td>{trdAvailedBlocksCount3}</td>
-                <td>{trdTotalHoursAvailed3}h</td>
+                <td>{timeConvert(trdTotalHoursAvailed3)}h</td>
                 <td>{enggAvailedBlocksCount3}</td>
-                <td>{enggTotalHoursAvailed3}h</td>
+                <td>{timeConvert(enggTotalHoursAvailed3)}h</td>
                 <td>{totalA}</td>
-                <td>{Math.floor(DurationA/60)}</td>
+                <td>{timeConvert(DurationA)}</td>
               </tr>
               <tr>
                 <td rowSpan=""></td>
                 <td>Demanded</td>
                 <td>{sntBlocksCount}</td>
-                <td>{sntTotalHoursDemanded}h</td>
+                <td>{timeConvert(sntTotalHoursDemanded)}h</td>
                 <td>{trdBlocksCount}</td>
-                <td>{trdTotalHoursDemanded}h</td>
+                <td>{timeConvert(trdTotalHoursDemanded)}h</td>
                 <td>{enggBlocksCount}</td>
-                <td>{enggTotalHoursDemanded}h</td>
+                <td>{timeConvert(enggTotalHoursDemanded)}h</td>
 
                 <td>{sntBlocksCount2}</td>
-                <td>{sntTotalHoursDemanded2}h</td>
+                <td>{timeConvert(sntTotalHoursDemanded2)}h</td>
                 <td>{trdBlocksCount2}</td>
-                <td>{trdTotalHoursDemanded2}h</td>
+                <td>{timeConvert(trdTotalHoursDemanded2)}h</td>
                 <td>{enggBlocksCount2}</td>
-                <td>{enggTotalHoursDemanded2}h</td>
+                <td>{timeConvert(enggTotalHoursDemanded2)}h</td>
 
                 <td>{sntBlocksCount3}</td>
-                <td>{sntTotalHoursDemanded3}h</td>
+                <td>{timeConvert(sntTotalHoursDemanded3)}h</td>
                 <td>{trdBlocksCount3}</td>
-                <td>{trdTotalHoursDemanded3}h</td>
+                <td>{timeConvert(trdTotalHoursDemanded3)}h</td>
                 <td>{enggBlocksCount3}</td>
-                <td>{enggTotalHoursDemanded3}h</td>
+                <td>{timeConvert(enggTotalHoursDemanded3)}h</td>
                 <td>{totalD}</td>
+                <td>{timeConvert(DurationD)}</td>
               </tr>
             </React.Fragment>
           );
@@ -589,10 +595,14 @@ const SummaryPage = () => {
 
   const uniqueDates = getUniqueDates(lines);
 
+  const handleDownload = () => {
+    exportTableToExcel('summary-table', 'summary_table'); // Call the Excel export function
+  };
+
   return (
     <div>
       <div className="table-container">
-      <table className="table is-fullwidth is-bordered ">
+      <table className="table is-fullwidth is-bordered " id="summary-table">
         <thead>
           <tr>
             <th>Date</th>
@@ -645,6 +655,9 @@ const SummaryPage = () => {
         </tbody>
       </table>
     </div>
+    <button className="button is-primary" onClick={handleDownload}>
+        Download Excel
+      </button>
   </div>
   );
 };

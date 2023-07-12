@@ -5,6 +5,7 @@ import Dashboard from './Components/dashboard';
 import TablePage from './Components/TablePage';
 import RequestBlockPage from './Components/RequestBlocks';
 import AcceptRequestPage from './Components/AcceptRequestPage';
+import SummaryPage from './Components/Summary';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/request-block" element={<RequestBlockPage />} />
           <Route path="/accept" element={<AcceptRequestPage />} />
           <Route path="/" element={<Login setUser={setUser} />} />
+          <Route path="/summary" element={<SummaryPage />} />
         </Routes>
 
         {user && (
@@ -36,6 +38,9 @@ const App = () => {
               <li className="menu-item">
                 <Link to="/table">Table</Link>
               </li>
+              <li className="submenu-item">
+                  <Link to="/summary">Summary</Link>
+                </li>
             </ul>
           </div>
         )}

@@ -1,13 +1,13 @@
 import React, { useState} from 'react';
-import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import RequestBlockPage from './RequestBlocks';
 import AcceptancePage from './AcceptRequestPage';
 import TablePage from './TablePage';
+import SummaryPage from './Summary';
 import 'bulma/css/bulma.min.css'; // Import Bulma CSS
 
 const Dashboard = ({ user, setUser }) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     setUser(null);
@@ -40,6 +40,9 @@ const Dashboard = ({ user, setUser }) => {
                 <li className="submenu-item">
                   <Link to="/table">Table</Link>
                 </li>
+                <li className="submenu-item">
+                  <Link to="/summary">Summary</Link>
+                </li>
               </ul>
             )}
           </li>
@@ -54,6 +57,7 @@ const Dashboard = ({ user, setUser }) => {
           <Route path="/request-block" element={<RequestBlockPage />} />
           <Route path="/accept" element={<AcceptancePage />} />
           <Route path="/table" element={<TablePage />} />
+          <Route path="/summary" element={<SummaryPage />} />
         </Routes>
         <button onClick={handleLogout}>Logout</button>
       </div>
