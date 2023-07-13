@@ -25,13 +25,6 @@ const APISorter = () => {
     setChecked(prev => checked ? [...prev, name] : prev.filter(e => e !== name));
   };
 
-  useEffect(() => {
-    if (checked.length > 0) {
-      const sortedData = _.orderBy(data, checked);
-      setData(sortedData);
-    }
-  }, [checked]);
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = ("0" + date.getDate()).slice(-2);
@@ -39,6 +32,9 @@ const APISorter = () => {
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
+
+  // Sort the data just before rendering
+  const sortedData = checked.length > 0 ? _.orderBy(data, checked) : data;
 
   return (
     <div>
@@ -67,11 +63,11 @@ const APISorter = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, index) => (
+            {sortedData.map((item, index) => (
               <tr key={index}>
                 {headers.map(header => (
                   <td key={header}>
-                    {header === 'dateField' ? formatDate(item[header]) : item[header]}
+                    {header === 'date' ? formatDate(item[header]) : item[header]}
                   </td>
                 ))}
               </tr>
