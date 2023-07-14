@@ -13,7 +13,7 @@ const SummaryPage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/accept');
+      const response = await axios.get('http://192.168.0.109:3001/accept');
       const data = response.data.data;
       setLines(data);
       setIsLoading(false);

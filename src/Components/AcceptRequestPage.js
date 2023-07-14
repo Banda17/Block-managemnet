@@ -15,7 +15,7 @@ const AcceptancePage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/accept');
+      const response = await axios.get('http://192.168.0.109:3001/accept');
       setTableData(response.data.data);
     } catch (error) {
       console.error('Error:', error.message);
@@ -90,7 +90,7 @@ const AcceptancePage = () => {
 
   const handleRequest = async (row) => {
     try {
-      const response = await axios.patch(`http://localhost:3001/updateAcceptance/${row._id}`, row);
+      const response = await axios.patch(`http://192.168.0.109:3001/updateAcceptance/${row._id}`, row);
       console.log(response.data); // Optionally, handle the response from the backend
     } catch (error) {
       console.error('Error:', error.message);

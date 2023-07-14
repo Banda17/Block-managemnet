@@ -16,7 +16,7 @@ const Dashboard = ({ user, handleLogout }) => {
         <div className="content">
           <h2>Welcome, {user.email}!</h2>
             <Routes>
-              <Route path="/dashboard" element={<h3>Dashboard Content</h3>} />
+              <Route path="/dashboard*" element={<h3>Dashboard Content</h3>} />
               <Route path="/request-block" element={<RequestBlockPage />} />
               <Route path="/accept" element={<AcceptancePage role={user.role} />} />
               {user.role === 'admin' && <Route path="/table" element={<TablePage />} />}
@@ -38,7 +38,7 @@ const Login = ({ setUser, setLoggedIn }) => {
 
     try {
       // Make a request to your backend server to perform authentication
-      const response = await fetch('http://localhost:3001/login', {
+      const response = await fetch('http://192.168.0.109:3001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
