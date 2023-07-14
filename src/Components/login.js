@@ -38,7 +38,7 @@ const Login = ({ setUser, setLoggedIn }) => {
 
     try {
       // Make a request to your backend server to perform authentication
-      const response = await fetch('http://192.168.0.109:3001/login', {
+      const response = await fetch('http://0.0.0.0:3001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
