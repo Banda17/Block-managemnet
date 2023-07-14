@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import axios from 'axios';
+//import NavBar from './navbar';
 
 const RequestBlockPage = () => {
+  //const [user, setUser] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({
     date: '',
     majorSection: '',
@@ -43,14 +45,18 @@ const RequestBlockPage = () => {
       SnT: ['Type X', 'Type Y', 'Type Z'],
       Engg: ['Type P', 'Type Q', 'Type R'],
     },
-    Board: ['Board 1', 'Board 2', 'Board 3'],
+    Board: ['WAT', 'RJY', 'TSR','UL','GDR','MTM'],
     designation: ['SSE', 'JE', 'Tech'],
     Station: {
-      'Board 1': ['Station A', 'Station B', 'Station C'],
-      'Board 2': ['Station D', 'Station E', 'Station F'],
-      'Board 3': ['Station G', 'Station H', 'Station I'],
+      'WAT': ['Thadi','Anakapalle','Kasimkota','Bayyavaram','Narasingapalli','Elamanchili','Regupalem','Narsipatnam Rd','Gullipadu','Tuni','Hamsavaram','Timmapuram','Annavaram','Ravikampadu','Durgada Gate','Gollaprolu','Pithapuram,Samalkot Jn','Gudaparti','Medapadu','Pedabramadvam','Bikkavolu','Balabhadrapuram','Anaparti','Dwarapudi','Kesavaram','Kadiyan'],
+      'RJY': ['Station D', 'Station E', 'Station F'],
+      'TSR': ['Station G', 'Station H', 'Station I'],
+      'UL': ['Station G', 'Station H', 'Station I'],
+      'GDR': ['Station G', 'Station H', 'Station I'],
+      'MTM': ['Station G', 'Station H', 'Station I'],
     },
     status: ['OpenLine', 'RVNL', 'Construction'],
+    direction: ['UP', 'DN', 'UP/DN']
   };
 
   const handleDropdownChange = (event, dropdownId) => {
@@ -95,9 +101,9 @@ const RequestBlockPage = () => {
 
   return (
     <div className="container">
-      <div className="columns">
-        <div className="column">
-          <h2>Request Block Page</h2>
+      <div className="columns is-multiline">
+        <div className="column is-one-third">
+          <h2 className="title is-2 has-text-centered" >Request Block Page</h2>
           <div className="field">
             <label className="label" htmlFor="Department">
               Department:
@@ -167,6 +173,33 @@ const RequestBlockPage = () => {
               </div>
             </div>
           </div>
+
+
+          <div className="field">
+            <label className="label" htmlFor="direction">
+            Direction:
+            </label>
+            <div className="control">
+              <div className="select">
+                <select
+                  id="status"
+                  className="input"
+                  value={selectedOptions.direction}
+                  onChange={(event) => handleDropdownChange(event, 'direction')}
+                >
+                  <option value="">Select a direction</option>
+                  {dropdownOptions.direction.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+
+
 
           <div className="field">
             <label className="label" htmlFor="Block_Section_Station">
@@ -342,6 +375,7 @@ const RequestBlockPage = () => {
               <tr>
                 <th>Department</th>
                 <th>Type of Block</th>
+                <th>Direction</th>
                 <th>Station/Section</th>
                 <th>Designation</th>
                 <th>Start Date</th>
@@ -358,6 +392,7 @@ const RequestBlockPage = () => {
                 <tr key={index}>
                   <td>{row.Department}</td>
                   <td>{row.typeOfWork}</td>
+                  <td>{row.direction}</td>
                   <td>{row.Block_Section_Station}</td>
                   <td>{row.designation}</td>
                   <td>{moment(row.date).format('YYYY-MM-DD')}</td>

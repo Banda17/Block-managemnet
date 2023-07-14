@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bulma/css/bulma.min.css';
-import * as XLSX from 'xlsx';;
+import * as XLSX from 'xlsx';
+//import NavBar from './navbar';
 
 const AcceptancePage = () => {
   const [tableData, setTableData] = useState([]);
+  //const [user, setUser] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -103,11 +105,12 @@ const AcceptancePage = () => {
   };
 
   return (
-    <div className="table-container">
+    <div>
       <div className='section'>
         <Link className="column is-one-quarter " to="/dashboard">Back to Dashboard</Link>
         <button className="button is-danger" onClick={downloadExcel}>Download as Excel</button>
       </div>
+    <div className="table-container">
       <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" style={{ fontSize: '12px' }}>
         {/* Table headers */}
         <thead className="thead-light">
@@ -241,8 +244,8 @@ const AcceptancePage = () => {
               <td>
                 <input
                   type="text"
-                  value={row.blockOutputUnit}
-                  onChange={(event) => handleFieldChange(event, index, 'blockOutputUnit')}
+                  value={row.blockBlockOutput}
+                  onChange={(event) => handleFieldChange(event, index, 'blockBlockOutput')}
                 />
               </td>
               <td>
@@ -266,6 +269,7 @@ const AcceptancePage = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

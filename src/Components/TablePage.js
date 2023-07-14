@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import _ from "lodash"; // lodash for easy multi-level sorting
+//import NavBar from "./navbar";
 
 const APISorter = () => {
   const [data, setData] = useState([]);

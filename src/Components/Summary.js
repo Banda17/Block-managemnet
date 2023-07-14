@@ -173,9 +173,8 @@ const SummaryPage = () => {
               ((line.Department === 'Trd' && line.blockDemandedDuration) && line.status === 'OpenLine'
                 ? line.blockDemandedDuration
                 : 0),
-            1
+            0
           );
-          console.log(trdTotalDurationDemanded);
           const enggTotalDurationDemanded = filteredLines.reduce(
             (total, line) =>
               total +
@@ -657,7 +656,7 @@ const SummaryPage = () => {
     </div>
     <button className="button is-primary" onClick={handleDownload}>
         Download Excel
-      </button>
+    </button>
   </div>
   );
 };

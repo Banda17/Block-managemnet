@@ -4,8 +4,10 @@ import Login from './Components/login';
 import Dashboard from './Components/dashboard';
 import TablePage from './Components/TablePage';
 import RequestBlockPage from './Components/RequestBlocks';
+//import ExcelLikeGrid from './Components/ExcelLikeGrid';
 import AcceptRequestPage from './Components/AcceptRequestPage';
 import SummaryPage from './Components/Summary';
+import 'bulma/css/bulma.min.css'; // Import Bulma CSS
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -13,6 +15,37 @@ const App = () => {
   return (
     <Router>
       <div className="container">
+        {user && (
+          <div className="tabs is-fullwidth is-primary">
+            <ul>
+              <li>
+                <Link to="/dashboard">
+                  <span>Dashboard</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/request-block">
+                  <span>Request Block</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/accept">
+                  <span>Accept</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/table">
+                  <span>Table</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/summary">
+                  <span>Summary</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
         <Routes>
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/dashboard" element={<Dashboard user={user} setUser={setUser} />} />
@@ -22,28 +55,6 @@ const App = () => {
           <Route path="/" element={<Login setUser={setUser} />} />
           <Route path="/summary" element={<SummaryPage />} />
         </Routes>
-
-        {user && (
-          <div>
-            <ul>
-              <li className="menu-item">
-                <Link to="/dashboard">Dashboard</Link>
-              </li>
-              <li className="menu-item">
-                <Link to="/request-block">Request Block</Link>
-              </li>
-              <li className="menu-item">
-                <Link to="/accept">Accept</Link>
-              </li>
-              <li className="menu-item">
-                <Link to="/table">Table</Link>
-              </li>
-              <li className="submenu-item">
-                  <Link to="/summary">Summary</Link>
-                </li>
-            </ul>
-          </div>
-        )}
       </div>
     </Router>
   );

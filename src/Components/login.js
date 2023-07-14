@@ -1,55 +1,31 @@
 import React, { useState } from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import RequestBlockPage from './RequestBlocks';
 import AcceptancePage from './AcceptRequestPage';
+//import ExcelLikeGrid from './ExcelLikeGrid';
 import TablePage from './TablePage';
+import NavBar from './navbar';
+import SummaryPage from './Summary';
+import 'bulma/css/bulma.min.css'; // Import Bulma CSS
 
 const Dashboard = ({ user, handleLogout }) => {
-  const [showSubMenu, setShowSubMenu] = useState(false);
-
-  const toggleSubMenu = () => {
-    setShowSubMenu(!showSubMenu);
-  };
-
   return (
-    <div className="dashboard-container">
-      <div className="sidebar">
-        <ul className="sidebar-menu">
-          <li className="menu-item">
-            <Link to="/dashboard">Dashboard</Link>
-          </li>
-          <li className="menu-item">
-            <div onClick={toggleSubMenu} className="menu-item-header">
-              Blocks
-              <i className={`arrow ${showSubMenu ? 'up' : 'down'}`} />
-            </div>
-            {showSubMenu && (
-              <ul className="submenu">
-                <li className="submenu-item">
-                  <Link to="/request-block">Request Block</Link>
-                </li>
-                <li className="submenu-item">
-                  <Link to="/accept">Accept</Link>
-                </li>
-                <li className="submenu-item">
-                  <Link to="/table">Table</Link>
-                </li>
-              </ul>
-            )}
-          </li>
-        </ul>
+    
+      <div className="container">
+        <NavBar user={user} />
+        <div className="content">
+          <h2>Welcome, {user.email}!</h2>
+            <Routes>
+              <Route path="/dashboard" element={<h3>Dashboard Content</h3>} />
+              <Route path="/request-block" element={<RequestBlockPage />} />
+              <Route path="/accept" element={<AcceptancePage role={user.role} />} />
+              {user.role === 'admin' && <Route path="/table" element={<TablePage />} />}
+              <Route path="/summary" element={<SummaryPage />} />
+            </Routes>
+          <button className="button is-danger" onClick={handleLogout}>Logout</button>
+        </div>
       </div>
-      <div className="content">
-        <h2>Welcome, {user.email}!</h2>
-        <Routes>
-          <Route path="/dashboard" element={<h3>Dashboard Content</h3>} />
-          <Route path="/request-block" element={<RequestBlockPage />} />
-          <Route path="/accept" element={<AcceptancePage />} />
-          <Route path="/table" element={<TablePage />} />
-        </Routes>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-    </div>
+      
   );
 };
 
@@ -72,8 +48,8 @@ const Login = ({ setUser, setLoggedIn }) => {
 
       if (response.ok) {
         // Authentication successful
-        const user = await response.json();
-        setUser(user);
+        const result = await response.json();
+        setUser({email: result.data.email, role: result.data.role}); // Assuming that the response contains an 'email' field.
         setLoggedIn(true);
       } else {
         // Authentication failed
@@ -86,27 +62,39 @@ const Login = ({ setUser, setLoggedIn }) => {
 
   return (
     <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <label>
-          Email:
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <br />
-        <button type="submit">Login</button>
+      <form className="box is-centered"  onSubmit={handleLogin}>
+        <div className="field">
+          <label className="label">
+            Email
+          </label>
+            <p className="control">
+              <input
+                className="input is-rounded"
+                placeholder="email"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </p>
+        </div>
+
+        <div className="field" >
+          <label className="label">
+            Password
+            </label>
+          <p className="control">
+            <input
+              className="input is-rounded"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </p>
+        </div>
+
+        <div className="buttons">
+        <button className="button is-light is-primary " type="submit">Login</button>
+        </div>
       </form>
     </div>
   );
