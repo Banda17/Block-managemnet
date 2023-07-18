@@ -80,7 +80,7 @@ const RequestBlockPage = () => {
     const newRow = { ...selectedOptions };
 
     try {
-      const response = await axios.post('http://192.168.0.109:3001/request', newRow);
+      const response = await axios.post('https://8505-2401-4900-4e1a-dde-85fe-6d20-2674-2f88.ngrok-free.app/request', newRow);
       console.log(newRow);
       if (response.status === 200) {
         setTableRows((prevRows) => [...prevRows, newRow]);

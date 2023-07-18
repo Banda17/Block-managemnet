@@ -38,7 +38,7 @@ const Login = ({ setUser, setLoggedIn }) => {
 
     try {
       // Make a request to your backend server to perform authentication
-      const response = await fetch('http://0.0.0.0:3001/login', {
+      const response = await fetch('https://350b-2401-4900-4e1a-dde-85fe-6d20-2674-2f88.ngrok-free.app/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

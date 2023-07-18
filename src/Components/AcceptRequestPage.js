@@ -15,12 +15,13 @@ const AcceptancePage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://192.168.0.109:3001/accept');
+      const response = await axios.get('https://1727-2401-4900-4e1a-dde-1ca8-23f-f8e7-2b11.ngrok-free.app/accept');
       setTableData(response.data.data);
     } catch (error) {
       console.error('Error:', error.message);
     }
   };
+  
 
   const handleFieldChange = (event, index, field) => {
     const newData = [...tableData];
@@ -90,7 +91,7 @@ const AcceptancePage = () => {
 
   const handleRequest = async (row) => {
     try {
-      const response = await axios.patch(`http://192.168.0.109:3001/updateAcceptance/${row._id}`, row);
+      const response = await axios.patch(` https://350b-2401-4900-4e1a-dde-85fe-6d20-2674-2f88.ngrok-free.app/updateAcceptance/${row._id}`, row);
       console.log(response.data); // Optionally, handle the response from the backend
     } catch (error) {
       console.error('Error:', error.message);
@@ -116,13 +117,17 @@ const AcceptancePage = () => {
         <thead className="thead-light">
           <tr>
             <th>Date</th>
+            <th>Divison</th>
+            <th>Major Section</th>
             <th>Status</th>
-            <th>Block Station/Section</th>
+            <th>Block Station From</th>
+            <th>Block Station To</th>
             <th>Direction</th>
             <th>Km From</th>
             <th>Km To</th>
             <th>Dept</th>
             <th>Type of Work</th>
+            <th>Miain or Shadow</th>
             <th>Planned From</th>
             <th>Planned To</th>
             <th>Planned Duration</th>
@@ -148,13 +153,17 @@ const AcceptancePage = () => {
           {tableData.map((row, index) => (
             <tr key={row._id}>
               <td>{row.date}</td>
+              <td>{row['Div']}</td>
+              <td>{row['Major Section']}</td>
               <td>{row.status}</td>
-              <td>{row.Block_Section_Station}</td>
+              <td>{row.BlockStationfrom}</td>
+              <td>{row.BlockStationTo}</td>
               <td>{row.direction}</td>
               <td>{row.kmFrom}</td>
               <td>{row.kmTo}</td>
               <td>{row.Department}</td>
               <td>{row.typeOfWork}</td>
+              <td>{row.mainorshadow}</td>
               <td>
                 <input
                   type="time"

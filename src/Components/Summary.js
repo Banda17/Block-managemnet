@@ -13,7 +13,7 @@ const SummaryPage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://192.168.0.109:3001/accept');
+      const response = await axios.get(' https://350b-2401-4900-4e1a-dde-85fe-6d20-2674-2f88.ngrok-free.app/accept');
       const data = response.data.data;
       setLines(data);
       setIsLoading(false);
